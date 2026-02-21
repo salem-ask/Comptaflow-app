@@ -27,27 +27,65 @@ button{
 <button onclick="logout()">Se déconnecter</button>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getAuth, signOut } 
-from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import { getAuth, signOut, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+import { getFirestore, doc, getDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAILbYrzz5COFPHYT6QpSo_yHo_7RscUuo",
-    authDomain: "comptaflow-f07fd.firebaseapp.com",
-    projectId: "comptaflow-f07fd",
-    storageBucket: "comptaflow-f07fd.firebasestorage.app",
-    messagingSenderId: "569317877234",
-    appId: "1:569317877234:web:ddfa4f5baeb3d56d55f76b"
+  apiKey: "TA_CLE_API",
+  authDomain: "TON_AUTH_DOMAIN",
+  projectId: "TON_PROJECT_ID",
+  storageBucket: "TON_STORAGE_BUCKET",
+  messagingSenderId: "TON_MESSAGING_ID",
+  appId: "TON_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-window.logout = function(){
-    signOut(auth).then(()=>{
-        window.location.href = "index.html";
-    });
-}
+/* 🔐 PROTECTION SUPERADMIN */
+onAuthStateChanged(auth, async (user) => {
+
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  const userRef = doc(db, "utilisateurs", user.uid);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  const userData = userSnap.data();
+
+  if (userData.role !== "superadmin" || userData.actif !== true) {
+    alert("Accès refusé");
+    window.location.href = "index.html";
+    return;
+  }
+
+  console.log("Superadmin connecté ✔");
+
+});
+
+/* 🔓 LOGOUT */
+window.logout = function() {
+  signOut(auth).then(() => {
+    window.location.href = "index.html";
+  });
+};
+
+
 </script>
 
 </body>
