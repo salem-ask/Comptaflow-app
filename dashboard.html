@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>ComptaFlow - Dashboard</title>
+<style>
+body{
+    font-family:Arial;
+    background:#f4f6f9;
+    text-align:center;
+    padding-top:100px;
+}
+button{
+    padding:10px 20px;
+    background:#2a5298;
+    color:white;
+    border:none;
+    border-radius:5px;
+}
+</style>
+</head>
+<body>
+
+<h1>Bienvenue sur ComptaFlow 🎉</h1>
+<p>Connexion réussie</p>
+
+<button onclick="logout()">Se déconnecter</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getAuth, signOut } 
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAILbYrzz5COFPHYT6QpSo_yHo_7RscUuo",
+    authDomain: "comptaflow-f07fd.firebaseapp.com",
+    projectId: "comptaflow-f07fd",
+    storageBucket: "comptaflow-f07fd.firebasestorage.app",
+    messagingSenderId: "569317877234",
+    appId: "1:569317877234:web:ddfa4f5baeb3d56d55f76b"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.logout = function(){
+    signOut(auth).then(()=>{
+        window.location.href = "index.html";
+    });
+}
+</script>
+
+</body>
+</html>

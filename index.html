@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ComptaFlow - Connexion</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.container{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    width:90%;
+    max-width:400px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#2a5298;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-weight:bold;
+    cursor:pointer;
+}
+button:hover{
+    background:#1e3c72;
+}
+.message{
+    text-align:center;
+    margin-top:10px;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>ComptaFlow</h2>
+    <input type="email" id="email" placeholder="Adresse email">
+    <input type="password" id="password" placeholder="Mot de passe">
+    <button onclick="connexion()">Se connecter</button>
+    <button onclick="inscription()" style="margin-top:10px;background:#28a745;">
+        Créer un compte
+    </button>
+    <div class="message" id="message"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAILbYrzz5COFPHYT6QpSo_yHo_7RscUuo",
+    authDomain: "comptaflow-f07fd.firebaseapp.com",
+    projectId: "comptaflow-f07fd",
+    storageBucket: "comptaflow-f07fd.firebasestorage.app",
+    messagingSenderId: "569317877234",
+    appId: "1:569317877234:web:ddfa4f5baeb3d56d55f76b"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+function afficherMessage(message, couleur="black"){
+    const msg = document.getElementById("message");
+    msg.innerText = message;
+    msg.style.color = couleur;
+}
+
+window.inscription = function(){
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if(email === "" || password === ""){
+        afficherMessage("Veuillez remplir tous les champs","red");
+        return;
+    }
+
+    createUserWithEmailAndPassword(auth,email,password)
+    .then(()=>{
+        afficherMessage("Compte créé avec succès","green");
+        setTimeout(()=>{
+            window.location.href = "dashboard.html";
+        },1500);
+    })
+    .catch((error)=>{
+        afficherMessage(error.message,"red");
+    });
+}
+
+window.connexion = function(){
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if(email === "" || password === ""){
+        afficherMessage("Veuillez remplir tous les champs","red");
+        return;
+    }
+
+    signInWithEmailAndPassword(auth,email,password)
+    .then(()=>{
+        afficherMessage("Connexion réussie","green");
+        setTimeout(()=>{
+            window.location.href = "dashboard.html";
+        },1500);
+    })
+    .catch((error)=>{
+        afficherMessage("Email ou mot de passe incorrect","red");
+    });
+}
+</script>
+
+
+</body>
+</html>
